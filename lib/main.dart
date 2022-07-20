@@ -1,6 +1,8 @@
 import 'package:best_calculator/calculator/calculator_page.dart';
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'currency/compare_page.dart';
 import 'currency/currency_model.dart';
@@ -8,54 +10,63 @@ import 'currency/currency_model.dart';
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<CurrencyModel>(CurrencyModelAdapter());
-  runApp(const MyApp());
+  runApp( MyApp(title:"Best Calculator"));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+   MyApp({Key? key, required this.title}) : super(key: key);
+String title;
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: '',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home:  MyHomePage(title: 'Best Calculator'),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
   
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
+   MyHomePage({Key? key, required this.title}) : super(key: key);
+   String title;
   
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomePage> createState() => _MyHomePageState(title);
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  _MyHomePageState(this.title);
+  String title;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
+     SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: curAppBarColor,
+      ),
+    );
     return DefaultTabController(
       initialIndex: 0,
       length: 3,
       child: Scaffold(
         key: _scaffoldKey,
-        backgroundColor: const Color(0xff22262F),
+        backgroundColor: curBgColor,
         appBar: AppBar(
+        
           leading: Builder(
             builder: (context) => IconButton(
               onPressed: () {
                  _scaffoldKey.currentState!.openDrawer();
               },
-              icon: const Icon(Icons.menu, color: Color(0xffFCA300), size: 28),
+              icon:  Icon(Icons.menu, color:  curActiveMenuColor, size: 28),
             ),
           ),
           actions: [
@@ -63,31 +74,30 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {
                 _scaffoldKey.currentState!.openEndDrawer();
               },
-              icon: const Icon(Icons.settings, color: Color(0xffFCA300), size: 28,),
+              icon:  Icon(Icons.settings, color: curActiveMenuColor, size: 28,),
             ),
           ],
-          backgroundColor: const Color(0xff1F2229),
-          title: const TabBar(
-            indicatorColor: Color(0xff1F2229),
+          backgroundColor: curAppBarColor,
+          title:  TabBar(
             indicatorWeight: 0.01,
             tabs: <Widget>[
               Tab(
-                icon: ImageIcon(AssetImage("assets/calculator.png"),
-                    size: 28, color: Color(0xffFCA300)),
+                icon: ImageIcon(const AssetImage("assets/calculator.png"),
+                    size: 28, color: curNotActiveMenuColor),
               ),
               Tab(
-                icon: ImageIcon(AssetImage("assets/money.png"),
-                    size: 28, color: Color(0xffFCA300)),
+                icon: ImageIcon(const AssetImage("assets/money.png"),
+                    size: 28, color: curNotActiveMenuColor),
               ),
               Tab(
-                icon: ImageIcon(AssetImage("assets/ruler.png"),
-                    size: 28, color: Color(0xffFCA300)),
+                icon: ImageIcon(const AssetImage("assets/ruler.png"),
+                    size: 28, color: curNotActiveMenuColor),
               ),
             ],
           ),
         ),
-        body: const TabBarView(
-          children: [CalculatorPage(),  ComparePage(),  RulerPage()],
+        body:  TabBarView(
+          children: [CalculatorPage(title: title,),  const ComparePage(),  const RulerPage()],
         ),
         drawer: Drawer(
           width: 280,
@@ -210,12 +220,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-
-
-
-  InkWell _themeButton(String image) {
-    return InkWell(
-      onTap: () {},
+GestureDetector _themeButton(String image) {
+  var thema=int.parse(image);
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          changeThemeColor(thema);
+        });
+        Navigator.pop(context);
+      },
       child: Image.asset(
         "assets/calculator/$image.png",
         height: 120,
@@ -223,6 +236,9 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+
+
 }
 
 
@@ -231,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
 class SettingPage extends StatefulWidget {
   const SettingPage({Key? key, required this.label}) : super(key: key);
   final String label;
-
+  
   @override
   State<SettingPage> createState() => _SettingPageState(label);
 }
@@ -240,6 +256,7 @@ class _SettingPageState extends State<SettingPage> {
   _SettingPageState(this.label);
   String label;
    bool isAccuracy = false;
+    final controller= TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -258,6 +275,7 @@ class _SettingPageState extends State<SettingPage> {
           SizedBox(
             width: 250,
             child: TextField(
+              controller: controller,
                 style: const TextStyle(
             fontSize: 12,
             color: Colors.black                  
@@ -272,7 +290,9 @@ class _SettingPageState extends State<SettingPage> {
             
           ),
           ),
-         TextButton(onPressed: (){}, 
+         TextButton(onPressed: (){
+         Navigator.push(context, MaterialPageRoute(builder: (context)=>MyHomePage(title: controller.text)));
+         }, 
          style:  ButtonStyle(backgroundColor: MaterialStateProperty.all<Color>(Colors.white70), ),
          child: const Text("ok", style: TextStyle(color: Colors.black),),),
          ],),
@@ -317,11 +337,23 @@ class _SettingPageState extends State<SettingPage> {
 }
 
 
-class ThemaPage extends StatelessWidget {
+
+
+class ThemaPage extends StatefulWidget {
   const ThemaPage({Key? key}) : super(key: key);
 
   @override
+  State<ThemaPage> createState() => _ThemaPageState();
+}
+
+class _ThemaPageState extends State<ThemaPage> {
+   @override
   Widget build(BuildContext context) {
+      SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: curAppBarColor,
+      ),
+    );
     return  Container(
             color:  const Color(0xffC1C1C1),
             padding: const EdgeInsets.only(top: 20, left: 50, right: 50),
@@ -385,10 +417,15 @@ class ThemaPage extends StatelessWidget {
             ]),
     );
   }
-
-   InkWell _themeButton(String image) {
-    return InkWell(
-      onTap: () {},
+ GestureDetector _themeButton(String image) {
+  var thema=int.parse(image);
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          changeThemeColor(thema);
+          Navigator.pop(context);
+        });
+      },
       child: Image.asset(
         "assets/calculator/$image.png",
         height: 250,
@@ -396,5 +433,7 @@ class ThemaPage extends StatelessWidget {
       ),
     );
   }
+
 }
+
 

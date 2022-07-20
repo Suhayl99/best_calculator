@@ -1,8 +1,6 @@
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:math_expressions/math_expressions.dart';
-
 import '../calculator/scale_widget.dart';
 
 class Dictance extends StatefulWidget {
@@ -41,18 +39,35 @@ class _DictanceState extends State<Dictance> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DropdownButton<String>(
-                      dropdownColor: firstColor,
-                      iconDisabledColor: const Color(0xffFCA300),
+                      itemHeight: 70,
+                      alignment: Alignment.center,
+                      dropdownColor: curFirstColor,
+                      iconDisabledColor: curActiveMenuColor,
                       value: _value,
                       items: cityName
                           .map(
                             (e) => DropdownMenuItem<String>(
                               value: e,
-                              child: Text(
-                                "${e.split('/').first}\n${e.split('/').last}",
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold, color:Color(0xffFCA300) ),
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                   Text(
+                                e.split('/').last,
+                                style:  TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.normal, color:curFirstColor ),
                               ),
+                               Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(bottom: 10),
+                                 child: Text(
+                                  e.split('/').first,
+                                  style: TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.normal, color: curSecondColor ),
+                              ),
+                               ),
+                                ],
+                              )
                             ),
                           )
                           .toList(),
@@ -71,7 +86,7 @@ class _DictanceState extends State<Dictance> {
             (BuildContext context) {
               return Container(
                 height: size.height*0.44,
-                color: Colors.amber,
+                color: curBgColor,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -82,22 +97,22 @@ class _DictanceState extends State<Dictance> {
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                 button(numClr, "7", numTxtClr),
-                button(numClr, "8", numTxtClr),
-                button(numClr, "9", numTxtClr),
-                button(actionsClmnnClr, "⌫", actionsClrText),
-                button(numClr, "4", numTxtClr),
-                button(numClr, "5", numTxtClr),
-                button(numClr, "6", numTxtClr),
-                button(actionsClmnnClr, "OK", actionsClrText),
-                button(numClr, "1", numTxtClr),
-                button(numClr, "2", numTxtClr),
-                button(numClr, "3", numTxtClr),
-                button(actionsClmnnClr, "C", actionsClrText),
-                button(numClr, ".", numTxtClr),
-                button(numClr, "0", numTxtClr),
-                button(numClr, "00", numTxtClr),
-                 button(actionsClmnnClr, "▽", actionsClrText),
+                 button(curAppBarColor, "7", curActiveMenuColor),
+                button(curAppBarColor, "8", curActiveMenuColor),
+                button(curAppBarColor, "9", curActiveMenuColor),
+                button(curAppBarColor, "⌫", curActiveMenuColor),
+                button(curAppBarColor, "4", curActiveMenuColor),
+                button(curAppBarColor, "5", curActiveMenuColor),
+                button(curAppBarColor, "6", curActiveMenuColor),
+                button(curAppBarColor, "OK", curActiveMenuColor),
+                button(curAppBarColor, "1", curActiveMenuColor),
+                button(curAppBarColor, "2", curActiveMenuColor),
+                button(curAppBarColor, "3", curActiveMenuColor),
+                button(curAppBarColor, "C", curActiveMenuColor),
+                button(curAppBarColor, ".", curActiveMenuColor),
+                button(curAppBarColor, "0", curActiveMenuColor),
+                button(curAppBarColor, "00", curActiveMenuColor),
+                 button(curAppBarColor, "▽", curActiveMenuColor),
                     ],
                   ),
                 ),
@@ -105,7 +120,7 @@ class _DictanceState extends State<Dictance> {
             },
           );
         },
-        child: Expanded(child: Text(count, style:  TextStyle(color: const Color(0xffFCA300), fontSize: sizeText),)),
+        child: Expanded(child: Text(count, style:  TextStyle(color: curActiveMenuColor, fontSize: sizeText),)),
       ),
                      
                   ],
@@ -117,14 +132,14 @@ class _DictanceState extends State<Dictance> {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: [
-            unitElements("kilometer", "km", qiymat[0], firstColor, count, value1),
-            unitElements("millimeter", "mm", qiymat[1], secondColor, count, value1),
-            unitElements("centimeter", "cm", qiymat[2], firstColor,count, value1),
-            unitElements("mile", "mi", qiymat[3], secondColor, count, value1),
-            unitElements("yard", "yd", qiymat[4], firstColor, count, value1),
-            unitElements("foot", "ft", qiymat[5], secondColor, count, value1),
-            unitElements("inch", "in", qiymat[6], firstColor, count, value1),
-            unitElements("nautical mile", "nmi", qiymat[7], secondColor,count, value1),
+            unitElements("kilometer", "km", qiymat[0], curFirstColor, count, value1),
+            unitElements("millimeter", "mm", qiymat[1], curSecondColor, count, value1),
+            unitElements("centimeter", "cm", qiymat[2], curFirstColor,count, value1),
+            unitElements("mile", "mi", qiymat[3], curSecondColor, count, value1),
+            unitElements("yard", "yd", qiymat[4], curFirstColor, count, value1),
+            unitElements("foot", "ft", qiymat[5], curSecondColor, count, value1),
+            unitElements("inch", "in", qiymat[6], curFirstColor, count, value1),
+            unitElements("nautical mile", "nmi", qiymat[7], curSecondColor,count, value1),
           ],
         ),
       ),

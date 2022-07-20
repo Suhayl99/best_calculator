@@ -1,3 +1,4 @@
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/area.dart';
 import 'package:best_calculator/ruler/cooking.dart';
 import 'package:best_calculator/ruler/distance.dart';
@@ -24,15 +25,15 @@ class _RulerPageState extends State<RulerPage> {
       initialIndex: 0,
       length: 7,
       child: Scaffold(
-          backgroundColor: const Color(0xff22262F),
+          backgroundColor: curAppBarColor,
           appBar: AppBar(
-            backgroundColor: const Color(0xff1F2229),
-            title: const TabBar(
-              indicatorColor: Color(0xffFCA300),
-              unselectedLabelColor: Color(0xffFCA300),
+            backgroundColor: curAppBarColor,
+            title:  TabBar(
+              indicatorColor: curActiveMenuColor,
+              unselectedLabelColor: curActiveMenuColor,
               isScrollable: true,
               indicatorWeight: 1,
-              tabs: <Widget>[
+              tabs: const <Widget>[
                 Tab(
                   text: "DISTANCE",
                 ),

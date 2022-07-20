@@ -1,3 +1,4 @@
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -20,39 +21,54 @@ class _MassState extends State<Mass> {
     "pound/lb",
     "ounce/ounce",
     "stone/st",
-    "carat/ct"
+    "carat/ct",
+    "kilogram/kg"
   ];
-  String? _value = "milligram/mg";
+  String? _value = "kilogram/kg";
     String count ="1";
  final List<double> qiymat = [
-  1000000, 1000, 0.001, 0.000984, 0.0011, 2.204622, 35.273991, 0.157, 5000
+  1000000, 1000, 0.001, 0.000984, 0.0011, 2.204622, 35.273991, 0.157, 5000, 1
    ];
   double? sizeText=48;
   double value1=1;
-
   @override
   Widget build(BuildContext context) {
      Size size = MediaQuery.of(context).size;
      return Column(
     children: [
-       Container(
+      Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
           child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DropdownButton<String>(
-                      dropdownColor: firstColor,
-                      iconDisabledColor: const Color(0xffFCA300),
+                      itemHeight: 70,
+                      dropdownColor: curFirstColor,
+                      iconDisabledColor: curActiveMenuColor,
                       value: _value,
                       items: cityName
                           .map(
                             (e) => DropdownMenuItem<String>(
                               value: e,
-                              child: Text(
-                                "${e.split('/').first}\n(${e.split('/').first}) ",
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold, color:Color(0xffFCA300) ),
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                   Text(
+                                e.split('/').last,
+                                style:  TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.normal, color:curFirstColor),
                               ),
+                               Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(bottom: 10),
+                                 child: Text(
+                                  e.split('/').first,
+                                  style:  TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.normal, color:curSecondColor),
+                              ),
+                               ),
+                                ],
+                              )
                             ),
                           )
                           .toList(),
@@ -65,13 +81,13 @@ class _MassState extends State<Mass> {
                         });
                       },
                     ),
-                   InkWell(
+                     InkWell(
         onTap: (){
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
                 height: size.height*0.44,
-                color: Colors.amber,
+                color: curBgColor,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -82,22 +98,22 @@ class _MassState extends State<Mass> {
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                 button(numClr, "7", numTxtClr),
-                button(numClr, "8", numTxtClr),
-                button(numClr, "9", numTxtClr),
-                button(actionsClmnnClr, "⌫", actionsClrText),
-                button(numClr, "4", numTxtClr),
-                button(numClr, "5", numTxtClr),
-                button(numClr, "6", numTxtClr),
-                button(actionsClmnnClr, "OK", actionsClrText),
-                button(numClr, "1", numTxtClr),
-                button(numClr, "2", numTxtClr),
-                button(numClr, "3", numTxtClr),
-                button(actionsClmnnClr, "C", actionsClrText),
-                button(numClr, ".", numTxtClr),
-                button(numClr, "0", numTxtClr),
-                button(numClr, "00", numTxtClr),
-                 button(actionsClmnnClr, "▽", actionsClrText),
+                 button(curAppBarColor, "7", curActiveMenuColor),
+                button(curAppBarColor, "8", curActiveMenuColor),
+                button(curAppBarColor, "9", curActiveMenuColor),
+                button(curAppBarColor, "⌫", curActiveMenuColor),
+                button(curAppBarColor, "4", curActiveMenuColor),
+                button(curAppBarColor, "5", curActiveMenuColor),
+                button(curAppBarColor, "6", curActiveMenuColor),
+                button(curAppBarColor, "OK", curActiveMenuColor),
+                button(curAppBarColor, "1", curActiveMenuColor),
+                button(curAppBarColor, "2", curActiveMenuColor),
+                button(curAppBarColor, "3", curActiveMenuColor),
+                button(curAppBarColor, "C", curActiveMenuColor),
+                button(curAppBarColor, ".", curActiveMenuColor),
+                button(curAppBarColor, "0", curActiveMenuColor),
+                button(curAppBarColor, "00", curActiveMenuColor),
+                 button(curAppBarColor, "▽", curActiveMenuColor),
                     ],
                   ),
                 ),
@@ -105,7 +121,7 @@ class _MassState extends State<Mass> {
             },
           );
         },
-        child: Expanded(child: Text(count, style:  TextStyle(color: const Color(0xffFCA300), fontSize: sizeText),)),
+        child: Expanded(child: Text(count, style:  TextStyle(color: curActiveMenuColor, fontSize: sizeText),)),
       ),
                   ],
                 ),
@@ -116,15 +132,16 @@ class _MassState extends State<Mass> {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: [
-             unitElements("milligram", "mg",  1000000, firstColor,count, value1),
-            unitElements("gram", "g",  1000,  secondColor, count, value1),
-            unitElements("ton", "t", 0.001, firstColor, count, value1),
-            unitElements("long ton", "ton(UK)",  0.000984, secondColor, count, value1),
-            unitElements("short ton", "ton(US)", 0.0011, firstColor, count, value1),
-            unitElements("pound", "lb", 2.204622,  secondColor, count, value1),
-            unitElements("ounce", "ounce", 35.273991, firstColor, count, value1),
-            unitElements("stone", "st", 0.157,  secondColor, count, value1),
-            unitElements("carat", "ct", 5000, firstColor, count, value1),
+             unitElements("milligram", "mg",  1000000, curFirstColor,count, value1),
+            unitElements("gram", "g",  1000,  curSecondColor, count, value1),
+            unitElements("ton", "t", 0.001, curFirstColor, count, value1),
+            unitElements("long ton", "ton(UK)",  0.000984, curSecondColor, count, value1),
+            unitElements("short ton", "ton(US)", 0.0011, curFirstColor, count, value1),
+            unitElements("pound", "lb", 2.204622,  curSecondColor, count, value1),
+            unitElements("ounce", "ounce", 35.273991, curFirstColor, count, value1),
+            unitElements("stone", "st", 0.157,  curSecondColor, count, value1),
+            unitElements("carat", "ct", 5000, curFirstColor, count, value1),
+            unitElements("kilogram", "kg", 1, curSecondColor, count, value1),
           ],
         ),
       ),

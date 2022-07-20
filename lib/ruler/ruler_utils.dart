@@ -24,7 +24,7 @@ unitElements(String name, String shortName, double result, Color color, String c
             Text(
               shortName,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 color: Colors.white,
               ),
             ),
@@ -33,7 +33,7 @@ unitElements(String name, String shortName, double result, Color color, String c
         Text(
           "${result*counts/value}",
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             color: Colors.white,
           ),
         ),
@@ -42,17 +42,6 @@ unitElements(String name, String shortName, double result, Color color, String c
   );
 }
 
-Color firstColor = const Color(0xFF454545);
-Color secondColor = const Color(0xFF555454);
-
-
-  Color numClr = const Color(0xff32363F);
-  Color actionsClmnnClr = const Color(0xFF1F2229);
-  Color actionsClrText = const Color(0xFFFCA300);
-  Color numTxtClr = Colors.white54;
-  Color actRowClr = const Color(0xFF1F2229);
-  Color resultClr = Colors.black;
-  Color lastAction = const Color(0xFF747477);
 
 
   unitElementTemperature(String name, String shortName, Color color, String count) {
@@ -86,7 +75,7 @@ Color secondColor = const Color(0xFF555454);
             Text(
               shortName,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 20,
                 color: Colors.white,
               ),
             ),
@@ -95,7 +84,7 @@ Color secondColor = const Color(0xFF555454);
         Text(
           "$result",
           style: const TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             color: Colors.white,
           ),
         ),

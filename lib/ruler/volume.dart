@@ -1,3 +1,4 @@
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -36,11 +37,12 @@ class _VolumeState extends State<Volume> {
     "barrel/bbl",
     "cord/cord",
     "gill/gill",
+    "cubic meter/m³"
   ];
-  String? _value = "cubic millimeter/mm³";
+  String? _value = "cubic meter/m³";
   String count = "1";
  final List<double> qiymat = [
-      1000000000, 1000000, 1000, 1000000, 1000, 35.314725, 61023.844502, 264.172052, 1056.688209, 2113.376419, 33814.022702, 4226.752838, 67628.04504, 202884.136211, 219.9691157, 879.894413, 1759.633996, 35195.079728, 3519.503328, 56312.647821, 168947.457341, 270512.181615, 6.289811, 0.276, 8453.799983
+      1000000000, 1000000, 1000, 1000000, 1000, 35.314725, 61023.844502, 264.172052, 1056.688209, 2113.376419, 33814.022702, 4226.752838, 67628.04504, 202884.136211, 219.9691157, 879.894413, 1759.633996, 35195.079728, 3519.503328, 56312.647821, 168947.457341, 270512.181615, 6.289811, 0.276, 8453.799983, 1
    ];
   double? sizeText=48;
   double value1=1;
@@ -50,45 +52,58 @@ class _VolumeState extends State<Volume> {
      Size size = MediaQuery.of(context).size;
     return Column(
       children: [
-        Container(
+       Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              DropdownButton<String>(
-                dropdownColor: firstColor,
-                iconDisabledColor: const Color(0xffFCA300),
-                value: _value,
-                items: cityName
-                    .map(
-                      (e) => DropdownMenuItem<String>(
-                        value: e,
-                        child: Text(
-                          "${e.split('/').first}\n(${e.split('/').last}) ",
-                          style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffFCA300)),
-                        ),
-                      ),
-                    )
-                    .toList(),
-                onChanged: (item) {
-                  setState(() {
-                    _value = item;
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    DropdownButton<String>(
+                      itemHeight: 70,
+                      dropdownColor: curFirstColor,
+                      iconDisabledColor: curActiveMenuColor,
+                      value: _value,
+                      items: cityName
+                          .map(
+                            (e) => DropdownMenuItem<String>(
+                              value: e,
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                   Text(
+                                e.split('/').last,
+                                style:  TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.normal, color:curFirstColor),
+                              ),
+                               Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(bottom: 10),
+                                 child: Text(
+                                  e.split('/').first,
+                                  style:  TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.normal, color:curSecondColor),
+                              ),
+                               ),
+                                ],
+                              )
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (item) {
+                        setState(() {
+                           _value = item;
                           if(cityName.contains(_value)){
                               value1=qiymat[cityName.indexOf(_value!)];
                           }
-                  });
-                },
-              ),
-              InkWell(
+                        });
+                      },
+                    ),
+                     InkWell(
         onTap: (){
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
                 height: size.height*0.44,
-                color: Colors.amber,
+                color: curBgColor,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -99,22 +114,22 @@ class _VolumeState extends State<Volume> {
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                 button(numClr, "7", numTxtClr),
-                button(numClr, "8", numTxtClr),
-                button(numClr, "9", numTxtClr),
-                button(actionsClmnnClr, "⌫", actionsClrText),
-                button(numClr, "4", numTxtClr),
-                button(numClr, "5", numTxtClr),
-                button(numClr, "6", numTxtClr),
-                button(actionsClmnnClr, "OK", actionsClrText),
-                button(numClr, "1", numTxtClr),
-                button(numClr, "2", numTxtClr),
-                button(numClr, "3", numTxtClr),
-                button(actionsClmnnClr, "C", actionsClrText),
-                button(numClr, ".", numTxtClr),
-                button(numClr, "0", numTxtClr),
-                button(numClr, "00", numTxtClr),
-                 button(actionsClmnnClr, "▽", actionsClrText),
+                 button(curAppBarColor, "7", curActiveMenuColor),
+                button(curAppBarColor, "8", curActiveMenuColor),
+                button(curAppBarColor, "9", curActiveMenuColor),
+                button(curAppBarColor, "⌫", curActiveMenuColor),
+                button(curAppBarColor, "4", curActiveMenuColor),
+                button(curAppBarColor, "5", curActiveMenuColor),
+                button(curAppBarColor, "6", curActiveMenuColor),
+                button(curAppBarColor, "OK", curActiveMenuColor),
+                button(curAppBarColor, "1", curActiveMenuColor),
+                button(curAppBarColor, "2", curActiveMenuColor),
+                button(curAppBarColor, "3", curActiveMenuColor),
+                button(curAppBarColor, "C", curActiveMenuColor),
+                button(curAppBarColor, ".", curActiveMenuColor),
+                button(curAppBarColor, "0", curActiveMenuColor),
+                button(curAppBarColor, "00", curActiveMenuColor),
+                 button(curAppBarColor, "▽", curActiveMenuColor),
                     ],
                   ),
                 ),
@@ -122,7 +137,7 @@ class _VolumeState extends State<Volume> {
             },
           );
         },
-        child: Expanded(child: Text(count, style:  TextStyle(color: const Color(0xffFCA300), fontSize: sizeText),)),
+        child: Expanded(child: Text(count, style:  TextStyle(color: curActiveMenuColor, fontSize: sizeText),)),
       ),
 
             ],
@@ -135,36 +150,36 @@ class _VolumeState extends State<Volume> {
             shrinkWrap: true,
             children: [
               unitElements(
-                  "cubic millimeter", "mm³", 1000000000,  firstColor, count, value1),
+                  "cubic millimeter", "mm³", 1000000000,  curFirstColor, count, value1),
               unitElements(
-                  "cubic santimeter", "cm³", 1000000, secondColor, count, value1),
-              unitElements("cubic decimeter", "dm³",  1000,  firstColor, count, value1),
-              unitElements("milliliter", "ml (cc)", 1000000, secondColor, count, value1),
-              unitElements("liter", "L",  1000, firstColor, count, value1),
-              unitElements("cubic foot", "ft³", 35.314725, secondColor, count, value1),
-              unitElements("cubic inch", "in³", 61023.844502,  firstColor, count, value1),
-              unitElements("(US) gallon", "gal (US)", 264.172052, secondColor, count, value1),
+                  "cubic santimeter", "cm³", 1000000, curSecondColor, count, value1),
+              unitElements("cubic decimeter", "dm³",  1000,  curFirstColor, count, value1),
+              unitElements("milliliter", "ml (cc)", 1000000, curSecondColor, count, value1),
+              unitElements("liter", "L",  1000, curFirstColor, count, value1),
+              unitElements("cubic foot", "ft³", 35.314725, curSecondColor, count, value1),
+              unitElements("cubic inch", "in³", 61023.844502,  curFirstColor, count, value1),
+              unitElements("(US) gallon", "gal (US)", 264.172052, curSecondColor, count, value1),
               unitElements(
-                  "(US) quart", "qt lqd (US)", 1056.688209,  firstColor, count, value1),
+                  "(US) quart", "qt lqd (US)", 1056.688209,  curFirstColor, count, value1),
               unitElements(
-                  "(US) pint", "pt lqd (US)", 2113.376419,  secondColor, count, value1),
-              unitElements("(US) ounce", "oz (US)", 33814.022702,  firstColor, count, value1),
-              unitElements("(US) cup", "cup (US)", 4226.752838,  secondColor, count, value1),
+                  "(US) pint", "pt lqd (US)", 2113.376419,  curSecondColor, count, value1),
+              unitElements("(US) ounce", "oz (US)", 33814.022702,  curFirstColor, count, value1),
+              unitElements("(US) cup", "cup (US)", 4226.752838,  curSecondColor, count, value1),
               unitElements(
-                  "(US) tablespoon", "tbsp (US)", 67628.04504, firstColor, count, value1),
+                  "(US) tablespoon", "tbsp (US)", 67628.04504, curFirstColor, count, value1),
               unitElements(
-                  "(US) teaspoon", "tsp (US)", 202884.136211, secondColor, count, value1),
-              unitElements("(UK) gallon", "gal (UK)",  219.9691157,  secondColor, count, value1),
-              unitElements("(UK) quart", "qt (UK)", 879.894413, firstColor, count, value1),
-              unitElements("(UK) pint", "pt (UK)", 1759.633996, secondColor, count, value1),
-              unitElements("(UK) ounce", "oz (UK)",  35195.079728, firstColor, count, value1),
-              unitElements("(UK) cup", "cup (UK)", 3519.503328, secondColor, count, value1),
-              unitElements("(UK) tablespoon", "tbsp (UK)",  56312.647821, firstColor, count, value1),
-              unitElements("(UK) teaspoon", "tsp (UK)", 168947.457341, secondColor, count, value1),
-              unitElements("dram", "dr",  270512.181615, firstColor, count, value1),
-              unitElements("barrel", "bbl",  6.289811, secondColor, count, value1),
-              unitElements("cord", "cord", 0.276,  firstColor, count, value1),
-              unitElements("gill", "gill", 8453.799983, secondColor, count, value1),
+                  "(US) teaspoon", "tsp (US)", 202884.136211, curSecondColor, count, value1),
+              unitElements("(UK) gallon", "gal (UK)",  219.9691157,  curFirstColor, count, value1),
+              unitElements("(UK) quart", "qt (UK)", 879.894413, curSecondColor, count, value1),
+              unitElements("(UK) pint", "pt (UK)", 1759.633996, curFirstColor, count, value1),
+              unitElements("(UK) ounce", "oz (UK)",  35195.079728, curSecondColor, count, value1),
+              unitElements("(UK) cup", "cup (UK)", 3519.503328, curFirstColor, count, value1),
+              unitElements("(UK) tablespoon", "tbsp (UK)",  56312.647821, curSecondColor, count, value1),
+              unitElements("(UK) teaspoon", "tsp (UK)", 168947.457341, curFirstColor, count, value1),
+              unitElements("dram", "dr",  270512.181615, curSecondColor, count, value1),
+              unitElements("barrel", "bbl",  6.289811, curFirstColor, count, value1),
+              unitElements("cord", "cord", 0.276,  curSecondColor, count, value1),
+              unitElements("gill", "gill", 8453.799983, curFirstColor, count, value1),
             ],
           ),
         ),

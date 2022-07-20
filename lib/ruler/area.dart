@@ -1,3 +1,4 @@
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -21,11 +22,12 @@ class _AreaState extends State<Area> {
     "square kilometer/km²",
     "acre/ac"
     "square mile/mi²",
+    "square meter/m²"
   ];
   String? _value = "square meter/m²";
   String count ="1";
    final List<double> qiymat = [
-    1000000, 10000, 1550.0031, 10.76391, 1.19599, 0.000001, 0.000247, 0.000000386
+    1000000, 10000, 1550.0031, 10.76391, 1.19599, 0.0001, 0.000001, 0.000247, 0.000000386, 1
    ];
   double? sizeText=48;
   double value1=1;
@@ -34,43 +36,58 @@ class _AreaState extends State<Area> {
      Size size = MediaQuery.of(context).size;
      return Column(
     children: [
-      Container(
+     Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
           child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DropdownButton<String>(
-                      dropdownColor: firstColor,
-                      iconDisabledColor: const Color(0xffFCA300),
+                      itemHeight: 70,
+                      dropdownColor: curFirstColor,
+                      iconDisabledColor: curActiveMenuColor,
                       value: _value,
                       items: cityName
                           .map(
                             (e) => DropdownMenuItem<String>(
                               value: e,
-                              child: Text(
-                                "${e.split('/').first}\n${e.split('/').first}",
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold, color:Color(0xffFCA300) ),
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                   Text(
+                                e.split('/').last,
+                                style:  TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.normal, color:curFirstColor),
                               ),
+                               Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(bottom: 10),
+                                 child: Text(
+                                  e.split('/').first,
+                                  style:  TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.normal, color:curSecondColor),
+                              ),
+                               ),
+                                ],
+                              )
                             ),
                           )
                           .toList(),
                       onChanged: (item) {
                         setState(() {
-                         _value = item;
+                           _value = item;
                           if(cityName.contains(_value)){
                               value1=qiymat[cityName.indexOf(_value!)];
                           }
                         });
                       },
                     ),
-                    InkWell(
+                     InkWell(
         onTap: (){
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
                 height: size.height*0.44,
-                color: Colors.amber,
+                color: curBgColor,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -81,22 +98,22 @@ class _AreaState extends State<Area> {
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                 button(numClr, "7", numTxtClr),
-                button(numClr, "8", numTxtClr),
-                button(numClr, "9", numTxtClr),
-                button(actionsClmnnClr, "⌫", actionsClrText),
-                button(numClr, "4", numTxtClr),
-                button(numClr, "5", numTxtClr),
-                button(numClr, "6", numTxtClr),
-                button(actionsClmnnClr, "OK", actionsClrText),
-                button(numClr, "1", numTxtClr),
-                button(numClr, "2", numTxtClr),
-                button(numClr, "3", numTxtClr),
-                button(actionsClmnnClr, "C", actionsClrText),
-                button(numClr, ".", numTxtClr),
-                button(numClr, "0", numTxtClr),
-                button(numClr, "00", numTxtClr),
-                 button(actionsClmnnClr, "▽", actionsClrText),
+                 button(curAppBarColor, "7", curActiveMenuColor),
+                button(curAppBarColor, "8", curActiveMenuColor),
+                button(curAppBarColor, "9", curActiveMenuColor),
+                button(curAppBarColor, "⌫", curActiveMenuColor),
+                button(curAppBarColor, "4", curActiveMenuColor),
+                button(curAppBarColor, "5", curActiveMenuColor),
+                button(curAppBarColor, "6", curActiveMenuColor),
+                button(curAppBarColor, "OK", curActiveMenuColor),
+                button(curAppBarColor, "1", curActiveMenuColor),
+                button(curAppBarColor, "2", curActiveMenuColor),
+                button(curAppBarColor, "3", curActiveMenuColor),
+                button(curAppBarColor, "C", curActiveMenuColor),
+                button(curAppBarColor, ".", curActiveMenuColor),
+                button(curAppBarColor, "0", curActiveMenuColor),
+                button(curAppBarColor, "00", curActiveMenuColor),
+                 button(curAppBarColor, "▽", curActiveMenuColor),
                     ],
                   ),
                 ),
@@ -104,7 +121,7 @@ class _AreaState extends State<Area> {
             },
           );
         },
-        child: Expanded(child: Text(count, style:  TextStyle(color: const Color(0xffFCA300), fontSize: sizeText),)),
+        child: Expanded(child: Text(count, style:  TextStyle(color: curActiveMenuColor, fontSize: sizeText),)),
       ),
                   ],
                 ),
@@ -115,15 +132,16 @@ class _AreaState extends State<Area> {
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: [
-             unitElements("square millimeter", "mm²", 1000000, firstColor, count, value1),
-            unitElements("square centimeter", "cm²", 10000, secondColor, count, value1),
-            unitElements("inch", "in²", 1550.0031,  firstColor, count, value1),
-            unitElements("square foot", "ft²", 10.76391, secondColor, count, value1),
-            unitElements("square yard", "yd²", 1.19599, firstColor, count, value1),
-            unitElements("hectare", "ha", 0.0001, secondColor, count, value1),
-            unitElements("square kilometer", "km²",  0.000001, firstColor, count, value1),
-            unitElements("acre", "ac", 0.000247, secondColor, count, value1),
-            unitElements("square mile", "mi²", 0.000000386, firstColor,count, value1),
+             unitElements("square millimeter", "mm²", 1000000, curFirstColor, count, value1),
+            unitElements("square centimeter", "cm²", 10000, curSecondColor, count, value1),
+            unitElements("inch", "in²", 1550.0031,  curFirstColor, count, value1),
+            unitElements("square foot", "ft²", 10.76391, curSecondColor, count, value1),
+            unitElements("square yard", "yd²", 1.19599, curFirstColor, count, value1),
+            unitElements("hectare", "ha", 0.0001, curSecondColor, count, value1),
+            unitElements("square kilometer", "km²",  0.000001, curFirstColor, count, value1),
+            unitElements("acre", "ac", 0.000247, curSecondColor, count, value1),
+            unitElements("square mile", "mi²", 0.000000386, curFirstColor,count, value1),
+            unitElements("square meter", "m²", 1, curFirstColor,count, value1),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_utils.dart';
 import 'package:flutter/material.dart';
 
@@ -17,11 +18,12 @@ class _FuelState extends State<Fuel> {
     "kilometer / liter|km / L",
     "(UK) miles per gallon|MPG (UK)",
     "(US) miles per gallon|MPG (US)",
+    "liters/100kilometr|L/100km"
   ];
   String? _value = "liters/100kilometr|L/100km";
   String count ="1";
 final List<double> qiymat = [
-   0.354, 0.425, 100, 282.480936, 235.214583
+   0.354, 0.425, 100, 282.480936, 235.214583, 1
    ];
   double? sizeText=48;
   double value1=1;
@@ -37,18 +39,33 @@ final List<double> qiymat = [
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     DropdownButton<String>(
-                      dropdownColor: firstColor,
-                      iconDisabledColor: const Color(0xffFCA300),
+                      itemHeight: 70,
+                      dropdownColor: curFirstColor,
+                      iconDisabledColor: curActiveMenuColor,
                       value: _value,
                       items: cityName
                           .map(
                             (e) => DropdownMenuItem<String>(
                               value: e,
-                              child: Text(
-                               "${ e.split('|').last}\n${ e.split('|').first}",
-                                style: const TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold, color:Color(0xffFCA300) ),
+                              child:Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                   Text(
+                                e.split('|').last,
+                                style:  TextStyle(
+                                    fontSize: 24, fontWeight: FontWeight.normal, color:curFirstColor),
                               ),
+                               Container(
+                                alignment: Alignment.center,
+                                padding: const EdgeInsets.only(bottom: 10),
+                                 child: Text(
+                                  e.split('|').first,
+                                  style:  TextStyle(
+                                      fontSize: 16, fontWeight: FontWeight.normal, color:curSecondColor),
+                              ),
+                               ),
+                                ],
+                              )
                             ),
                           )
                           .toList(),
@@ -61,13 +78,13 @@ final List<double> qiymat = [
                         });
                       },
                     ),
-                         InkWell(
+                     InkWell(
         onTap: (){
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
                 height: size.height*0.44,
-                color: Colors.amber,
+                color: curBgColor,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -78,22 +95,22 @@ final List<double> qiymat = [
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                 button(numClr, "7", numTxtClr),
-                button(numClr, "8", numTxtClr),
-                button(numClr, "9", numTxtClr),
-                button(actionsClmnnClr, "⌫", actionsClrText),
-                button(numClr, "4", numTxtClr),
-                button(numClr, "5", numTxtClr),
-                button(numClr, "6", numTxtClr),
-                button(actionsClmnnClr, "OK", actionsClrText),
-                button(numClr, "1", numTxtClr),
-                button(numClr, "2", numTxtClr),
-                button(numClr, "3", numTxtClr),
-                button(actionsClmnnClr, "C", actionsClrText),
-                button(numClr, ".", numTxtClr),
-                button(numClr, "0", numTxtClr),
-                button(numClr, "00", numTxtClr),
-                 button(actionsClmnnClr, "▽", actionsClrText),
+                 button(curAppBarColor, "7", curActiveMenuColor),
+                button(curAppBarColor, "8", curActiveMenuColor),
+                button(curAppBarColor, "9", curActiveMenuColor),
+                button(curAppBarColor, "⌫", curActiveMenuColor),
+                button(curAppBarColor, "4", curActiveMenuColor),
+                button(curAppBarColor, "5", curActiveMenuColor),
+                button(curAppBarColor, "6", curActiveMenuColor),
+                button(curAppBarColor, "OK", curActiveMenuColor),
+                button(curAppBarColor, "1", curActiveMenuColor),
+                button(curAppBarColor, "2", curActiveMenuColor),
+                button(curAppBarColor, "3", curActiveMenuColor),
+                button(curAppBarColor, "C", curActiveMenuColor),
+                button(curAppBarColor, ".", curActiveMenuColor),
+                button(curAppBarColor, "0", curActiveMenuColor),
+                button(curAppBarColor, "00", curActiveMenuColor),
+                 button(curAppBarColor, "▽", curActiveMenuColor),
                     ],
                   ),
                 ),
@@ -101,7 +118,7 @@ final List<double> qiymat = [
             },
           );
         },
-        child: Expanded(child: Text(count, style:  TextStyle(color: const Color(0xffFCA300), fontSize: sizeText),)),
+        child: Expanded(child: Text(count, style:  TextStyle(color:curActiveMenuColor, fontSize: sizeText),)),
       ),  
                   ],
                 ),
@@ -113,14 +130,15 @@ final List<double> qiymat = [
           shrinkWrap: true,
           children: [
              unitElements("gallons(UK) / 100 miles", "gal(UK) / 100 miles",
-               0.354,  firstColor, count, value1),
+               0.354,  curFirstColor, count, value1),
             unitElements("gallons(US) / 100 miles", "gal(US) / 100 miles", 0.425,
-                secondColor, count, value1),
-            unitElements("kilometer / liter", "km / L",  100, firstColor, count, value1),
+                curSecondColor, count, value1),
+            unitElements("kilometer / liter", "km / L",  100, curFirstColor, count, value1),
             unitElements(
-                "(UK) miles per gallon", "MPG (UK)",  282.480936, secondColor, count, value1),
-            unitElements(
-                "(US) miles per gallon", "MPG (US)", 235.214583, firstColor, count, value1),
+                "(UK) miles per gallon", "MPG (UK)",  282.480936, curSecondColor, count, value1),
+            unitElements("(US) miles per gallon", "MPG (US)", 235.214583, curFirstColor, count, value1),
+            unitElements("liters/100kilometr", "L/100km", 1, curSecondColor, count, value1),
+
           ],
         ),
       ),

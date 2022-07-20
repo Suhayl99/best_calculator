@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/currency/currency_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,7 +11,6 @@ import '../calculator/constants.dart';
 import '../calculator/scale_widget.dart';
 import 'currency_model.dart';
 import 'hive_utils.dart';
-import 'package:flutter/services.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class ComparePage extends StatefulWidget {
@@ -28,13 +28,6 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
   List<CurrencyModel> _listCurrency = [];
   late CurrencyModel topCur;
   late CurrencyModel bottomCur;
-  Color numClr = const Color(0xff32363F);
-  Color actionsClmnnClr = const Color(0xFF1F2229);
-  Color actionsClrText = const Color(0xFFFCA300);
-  Color numTxtClr = Colors.white54;
-  Color actRowClr = const Color(0xFF1F2229);
-  Color resultClr = Colors.black;
-  Color lastAction = const Color(0xFF747477);
    String expression = "";
 
   @override
@@ -156,7 +149,7 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      backgroundColor: const Color(0xff1f2235),
+      backgroundColor: curWorkSpaceColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
@@ -170,7 +163,7 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
                       padding: const EdgeInsets.all(14),
                       margin: const EdgeInsets.symmetric(vertical: 20),
                       decoration: BoxDecoration(
-                        color: const Color(0xff2d334d),
+                        color: curAppBarColor,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
@@ -285,21 +278,21 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
               crossAxisCount: 4,
               primary: false,
               children: [
-                button(numClr, "7", numTxtClr),
-                button(numClr, "8", numTxtClr),
-                button(numClr, "9", numTxtClr),
-                button(actionsClmnnClr, "⌫", actionsClrText),
-                button(numClr, "4", numTxtClr),
-                button(numClr, "5", numTxtClr),
-                button(numClr, "6", numTxtClr),
-                button(actionsClmnnClr, "⟠", actionsClrText),
-                button(numClr, "1", numTxtClr),
-                button(numClr, "2", numTxtClr),
-                button(numClr, "3", numTxtClr),
-                button(actionsClmnnClr, "C", actionsClrText),
-                button(numClr, ".", numTxtClr),
-                button(numClr, "0", numTxtClr),
-                button(numClr, "00", numTxtClr),
+                button(curAppBarColor, "7", curOperandsColor),
+                button(curAppBarColor, "8", curOperandsColor),
+                button(curAppBarColor, "9", curOperandsColor),
+                button(curAppBarColor, "⌫", curOperandsColor),
+                button(curAppBarColor, "4", curOperandsColor),
+                button(curAppBarColor, "5", curOperandsColor),
+                button(curAppBarColor, "6", curOperandsColor),
+                button(curAppBarColor, "⟠", curOperandsColor),
+                button(curAppBarColor, "1", curOperandsColor),
+                button(curAppBarColor, "2", curOperandsColor),
+                button(curAppBarColor, "3", curOperandsColor),
+                button(curAppBarColor, "C", curOperandsColor),
+                button(curAppBarColor, ".", curOperandsColor),
+                button(curAppBarColor, "0", curOperandsColor),
+                button(curAppBarColor, "00", curOperandsColor),
               ],
             ),
           ],
@@ -396,7 +389,7 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
     );
   }
 
-  Widget button(Color bgclr, String text, Color numTxtClr) {
+  Widget button(Color bgclr, String text, Color curOperandsColor) {
     return scaleWidget(
       onTap: () => btnOnClick(text),
       scale: 0.7,
@@ -410,7 +403,7 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: numTxtClr,
+            color: curOperandsColor,
           ),
         ),
       ),

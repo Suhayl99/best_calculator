@@ -1,4 +1,5 @@
 
+import 'package:best_calculator/change_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -35,14 +36,14 @@ class _CurrencyPageState extends State<CurrencyPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff1f2235),
+        backgroundColor: appBarColor,
         elevation: 0,
         automaticallyImplyLeading: false,
         title: TextField(
           controller: _editingController,
           decoration: InputDecoration(
             border: OutlineInputBorder(borderRadius: BorderRadius.circular(15), borderSide: BorderSide.none),
-            fillColor: const Color(0xff2d334d),
+            fillColor: appBarColor,
             filled: true,
             contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
             prefixIcon: const Icon(

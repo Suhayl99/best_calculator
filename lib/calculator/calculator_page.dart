@@ -1,26 +1,23 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:best_calculator/change_theme.dart';
 import 'package:flutter/material.dart';
-import 'constants.dart';
-import 'scale_widget.dart';
 import 'package:flutter/services.dart';
+import 'scale_widget.dart';
 import 'package:math_expressions/math_expressions.dart';
 
 class CalculatorPage extends StatefulWidget {
-  const CalculatorPage({Key? key}) : super(key: key);
-
+   CalculatorPage({Key? key, required this.title}) : super(key: key);
+  String title;
   @override
-  State<CalculatorPage> createState() => _CalculatorPageState();
+  State<CalculatorPage> createState() => _CalculatorPageState(this.title);
 }
 
 class _CalculatorPageState extends State<CalculatorPage> {
+  _CalculatorPageState(this.title);
+  String title;
  final editController = TextEditingController();
   final resultController = TextEditingController();
-  Color numClr = const Color(0xff32363F);
-  Color actionsClmnnClr = const Color(0xFF1F2229);
-  Color actionsClrText = const Color(0xFFFCA300);
-  Color numTxtClr = Colors.white54;
-  Color actRowClr = const Color(0xFF1F2229);
-  Color resultClr =  Colors.black;
-  Color lastAction = const Color(0xFF747477);
+
   double editFontSize = 64;
   double resultFontSize = 28;
   String expression = "";
@@ -28,14 +25,51 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
   @override
   Widget build(BuildContext context) {
+      SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: curAppBarColor,
+      ),
+    );
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: ListView(
         children: [
-
-          TextButton.icon(onPressed: (){}, icon: const Icon(Icons.history), label: const Text("Calculator", style: TextStyle(fontSize: 20, fontStyle: FontStyle.normal, color: Color(0xffFCA300)), ),
-),
+           Padding(
+                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+                  child: Stack(
+                    alignment: Alignment.topCenter,
+                    children: [
+                      colorizeAnimation(),
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: InkWell(
+                          onTap: (() {}),
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.grey,
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: curWorkSpaceColor,
+                              ),
+                              child: const Icon(
+                                Icons.history,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+          
           Container(
+            color: curWorkSpaceColor,
               height: size.height*0.18,
               alignment: Alignment.bottomRight,
                 child: TextField(
@@ -47,22 +81,25 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   readOnly: true,
                   textAlign: TextAlign.end,
                   style: TextStyle(
-                    color: lastAction,
+                    color: curNumbersColor,
                     fontSize: editFontSize,
                   ),
                 ),
               ),
-              TextField(
-                controller: editController,
-                decoration: const InputDecoration(
-                    hintText: "0",
-                    hintStyle: TextStyle(color: Colors.black54),
-                    border: InputBorder.none),
-                readOnly: true,
-                textAlign: TextAlign.end,
-                style: TextStyle(
-                  color: resultClr,
-                  fontSize: resultFontSize,
+              Container(
+                 color: curWorkSpaceColor,
+                child: TextField(
+                  controller: editController,
+                  decoration: const InputDecoration(
+                      hintText: "0",
+                      hintStyle: TextStyle(color: Colors.black54),
+                      border: InputBorder.none),
+                  readOnly: true,
+                  textAlign: TextAlign.end,
+                  style: TextStyle(
+                    color: curNumbersColor,
+                    fontSize: resultFontSize,
+                  ),
                 ),
               ),
               GridView.count(
@@ -74,26 +111,26 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                  button(actRowClr, "xⁿ", actionsClrText),
-                  button(actRowClr, "%", actionsClrText),
-                  button(actRowClr, "÷", actionsClrText),
-                  button(actionsClmnnClr, "⌫", actionsClrText),
-                  button(numClr, "7", numTxtClr),
-                  button(numClr, "8", numTxtClr),
-                  button(numClr, "9", numTxtClr),
-                  button(actionsClmnnClr, "x", actionsClrText),
-                  button(numClr, "4", numTxtClr),
-                  button(numClr, "5", numTxtClr),
-                  button(numClr, "6", numTxtClr),
-                  button(actionsClmnnClr, "-", actionsClrText),
-                  button(numClr, "1", numTxtClr),
-                  button(numClr, "2", numTxtClr),
-                  button(numClr, "3", numTxtClr),
-                  button(actionsClmnnClr, "+", actionsClrText),
-                  button(numClr, ".", numTxtClr),
-                  button(numClr, "0", numTxtClr),
-                  button(numClr, "()", numTxtClr),
-                  button(actionsClmnnClr, "=", actionsClrText),
+                  button(curOperandsBgColor, "xⁿ", curOperandsColor),
+                  button(curOperandsBgColor, "%", curOperandsColor),
+                  button(curOperandsBgColor, "÷", curOperandsColor),
+                  button(curOperandsBgColor, "⌫", curOperandsColor),
+                  button(curNumbersBgColor, "7", curNumbersColor),
+                  button(curNumbersBgColor, "8", curNumbersColor),
+                  button(curNumbersBgColor, "9", curNumbersColor),
+                  button(curOperandsBgColor, "x", curOperandsColor),
+                  button(curNumbersBgColor, "4", curNumbersColor),
+                  button(curNumbersBgColor, "5", curNumbersColor),
+                  button(curNumbersBgColor, "6", curNumbersColor),
+                  button(curOperandsBgColor, "-", curOperandsColor),
+                  button(curNumbersBgColor, "1", curNumbersColor),
+                  button(curNumbersBgColor, "2", curNumbersColor),
+                  button(curNumbersBgColor, "3", curNumbersColor),
+                  button(curOperandsBgColor, "+", curOperandsColor),
+                  button(curNumbersBgColor, ".", curNumbersColor),
+                  button(curNumbersBgColor, "0", curNumbersColor),
+                  button(curNumbersBgColor, "( )", curNumbersColor),
+                  button(curOperandsBgColor, "=", curOperandsColor),
                 ],
               ),
 
@@ -102,8 +139,8 @@ class _CalculatorPageState extends State<CalculatorPage> {
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
+                color: curBgColor,
                 height: size.height*0.58,
-                color: Colors.amber,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
@@ -114,26 +151,26 @@ class _CalculatorPageState extends State<CalculatorPage> {
                 crossAxisCount: 4,
                 primary: false,
                 children: [
-                  button(actRowClr, "RAD", numTxtClr),
-                  button(actRowClr, "sin", numTxtClr),
-                  button(actRowClr, "cos", numTxtClr),
-                  button(actionsClmnnClr, "tan", white),
-                  button(numClr, "π", numTxtClr),
-                  button(numClr, "sinh", numTxtClr),
-                  button(numClr, "cosh", numTxtClr),
-                  button(actionsClmnnClr, "tanh", white),
-                  button(numClr, "x¯¹", numTxtClr),
-                  button(numClr, "x²", numTxtClr),
-                  button(numClr, "x³", numTxtClr),
-                  button(actionsClmnnClr, "exp", white),
-                  button(numClr, "log", numTxtClr),
-                  button(numClr, "ln", numTxtClr),
-                  button(numClr, "e", numTxtClr),
-                  button(actionsClmnnClr, "eⁿ", white),
-                  button(numClr, "|x|", numTxtClr),
-                  button(numClr, "√", numTxtClr),
-                  button(numClr, "∛", numTxtClr),
-                  button(actionsClmnnClr, "n!", white),
+                  button(curNumbersBgColor, "RAD", curNumbersColor),
+                  button(curNumbersBgColor, "sin", curNumbersColor),
+                  button(curNumbersBgColor, "cos", curNumbersColor),
+                  button(curNumbersBgColor, "tan", curNumbersColor),
+                  button(curNumbersBgColor, "π", curNumbersColor),
+                  button(curNumbersBgColor, "sinh", curNumbersColor),
+                  button(curNumbersBgColor, "cosh", curNumbersColor),
+                  button(curNumbersBgColor, "tanh", curNumbersColor),
+                  button(curNumbersBgColor, "x¯¹", curNumbersColor),
+                  button(curNumbersBgColor, "x²", curNumbersColor),
+                  button(curNumbersBgColor, "x³", curNumbersColor),
+                  button(curNumbersBgColor, "exp", curNumbersColor),
+                  button(curNumbersBgColor, "log", curNumbersColor),
+                  button(curNumbersBgColor, "ln", curNumbersColor),
+                  button(curNumbersBgColor, "e", curNumbersColor),
+                  button(curNumbersBgColor, "eⁿ", curNumbersColor),
+                  button(curNumbersBgColor, "|x|", curNumbersColor),
+                  button(curNumbersBgColor, "√", curNumbersColor),
+                  button(curNumbersBgColor, "∛", curNumbersColor),
+                  button(curNumbersBgColor, "n!", curNumbersColor),
                     ],
                   ),
                 ),
@@ -143,10 +180,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
         },
         child: Container(
           width: double.infinity,
-          height: 31,
+          height: 30,
           padding: const EdgeInsets.all(2),
-          decoration: const BoxDecoration(color:  Color(0xffFCA300)),
-          child: Image.asset("assets/buttomSheet.png", height: 15, width: 29, color: const Color(0xffFCA300),),
+          decoration:  BoxDecoration(color:  curActiveMenuColor),
+          child: Image.asset("assets/buttomSheet.png", height: 15, width: 29, color: curActiveMenuColor,),
         ),
       ),
         ],
@@ -154,21 +191,23 @@ class _CalculatorPageState extends State<CalculatorPage> {
     );
   }
 
- Widget button(Color bgclr, String text, Color numTxtClr) {
+ Widget button(Color bgclr, String text, Color curNumbersColor) {
+     Decoration activeDec = curCalcOperPadDec;
+    if (text.contains(RegExp(r"[0-9]")) || text == "( )" || text == ".") {
+      activeDec = curCalcNumPadDec;
+    }
     return scaleWidget(
       onTap: () => btnOnClick(text),
       scale: 0.7,
       child: Container(
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: bgclr,
-        ),
+        decoration: activeDec,
         child: Text(
           text,
           style: TextStyle(
             fontSize: 25,
             fontWeight: FontWeight.bold,
-            color: numTxtClr,
+            color: curNumbersColor,
           ),
         ),
       ),
@@ -289,6 +328,33 @@ class _CalculatorPageState extends State<CalculatorPage> {
     Expression exp = p.parse(expression);
     ContextModel cm = ContextModel();
     return "${exp.evaluate(EvaluationType.REAL, cm)}";
+  }
+
+    Widget colorizeAnimation() {
+    var colorizeColors = [
+      curWorkSpaceColor,
+      curWorkSpaceColor,
+      Colors.grey,
+      curWorkSpaceColor,
+    ];
+    const colorizeTextStyle = TextStyle(
+      fontSize: 22,
+    );
+
+    return AnimatedTextKit(
+      isRepeatingAnimation: true,
+      pause: const Duration(seconds: 1),
+      animatedTexts: [
+        ColorizeAnimatedText(
+          title,
+          textStyle: colorizeTextStyle,
+          colors: colorizeColors,
+          textAlign: TextAlign.center,
+          speed: const Duration(milliseconds: 500),
+        ),
+      ],
+      repeatForever: true,
+    );
   }
 }
 
