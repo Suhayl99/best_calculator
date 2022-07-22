@@ -1,4 +1,9 @@
+import 'dart:developer';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:best_calculator/calculator/calcule_model.dart';
+import 'package:best_calculator/calculator/constants.dart';
+import 'package:best_calculator/calculator/hive_utills.dart';
 import 'package:best_calculator/change_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,22 +14,40 @@ class CalculatorPage extends StatefulWidget {
    CalculatorPage({Key? key, required this.title}) : super(key: key);
   String title;
   @override
-  State<CalculatorPage> createState() => _CalculatorPageState(this.title);
+  State<CalculatorPage> createState() => _CalculatorPageState(title); 
 }
 
-class _CalculatorPageState extends State<CalculatorPage> {
+class _CalculatorPageState extends State<CalculatorPage> with HiveUtills{
   _CalculatorPageState(this.title);
+
+   final ValueNotifier< List<CalculateModel>> calculateList = ValueNotifier<List<CalculateModel>>([]);
   String title;
  final editController = TextEditingController();
   final resultController = TextEditingController();
 
-  double editFontSize = 64;
-  double resultFontSize = 28;
+  double editFontSize = 28;
+  double resultFontSize = 64;
   String expression = "";
+
+
+  
+  
+
+  getList() async{
+     if(getAllBox<CalculateModel>(calculateBox).toString().isEmpty){
+      calculateList.value=[];
+    }else{
+      calculateList.value= await getAllListBox<CalculateModel>(calculateBox);
+    }
+  }
+
+
+
 
 
   @override
   Widget build(BuildContext context) {
+   getList();
       SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: curAppBarColor,
@@ -34,8 +57,9 @@ class _CalculatorPageState extends State<CalculatorPage> {
     return Scaffold(
       body: ListView(
         children: [
-           Padding(
-                  padding: const EdgeInsets.only(bottom: 10, top: 10),
+           Container(
+                     color: curWorkSpaceColor,
+                  padding: const EdgeInsets.only( top: 25, right: 10),
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
@@ -43,7 +67,86 @@ class _CalculatorPageState extends State<CalculatorPage> {
                       Align(
                         alignment: Alignment.topRight,
                         child: InkWell(
-                          onTap: (() {}),
+                          onTap: (() {
+                            Scaffold.of(context).showBottomSheet<void>(
+            (BuildContext context) {
+              return Container(
+                padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+                color: curBgColor,
+               height: size.height*0.9,
+                child:Column(
+                  mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+                children: [
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text("history", style: TextStyle(color: curActiveMenuColor, fontSize: 24),),
+                        TextButton(onPressed: () { 
+                            clearAllBox<CalculateModel>(calculateBox);
+                            calculateList.value=[];
+                         },
+                        child: Text("🗑", style: TextStyle(color: curActiveMenuColor, fontSize: 32),)),
+                      ],
+                    ),
+                   ValueListenableBuilder<List<CalculateModel>>( builder:(BuildContext context, List<CalculateModel> value, Widget? child){
+
+                  return  Container(
+                      decoration: BoxDecoration(border:  Border(top: BorderSide(color: curActiveMenuColor, width: 2))),
+                      height: size.height*0.7,
+                      width: double.infinity,
+                      alignment: Alignment.center,
+                      child:ListView.builder(
+                      itemCount: calculateList.value.length,
+                      itemBuilder: (context, i) {
+
+                      return Container(
+                      decoration: BoxDecoration(border: Border(top: BorderSide(color: curActiveMenuColor, width: 1), bottom: BorderSide(color: curActiveMenuColor, width: 1), left: BorderSide(color: curActiveMenuColor, width: 1) , right: BorderSide(color: curActiveMenuColor, width: 1) ), ),
+                      child: ListTile(
+                        contentPadding: const EdgeInsets.only(right: 5),
+                        leading:   TextButton( onPressed: () {
+                          setState(() {
+                            print(calculateList.value);
+                          deleteAtBox<CalculateModel>(calculateBox, i);
+                          calculateList.value.removeAt(i);
+                          });
+                          },
+                        child: Text("🗑", style: TextStyle(color: curActiveMenuColor, fontSize: 20),),),
+                   title: Text("${calculateList.value[i].caculate}",style:TextStyle(color: firstColor, fontSize: 16) ),
+                   subtitle: Text("${calculateList.value[i].result}",style:TextStyle(color: secondColor, fontSize: 18) ),
+                   trailing:   Text("${calculateList.value[i].date}", style: TextStyle(color: curActiveMenuColor, fontSize: 12),),
+                   ),
+                    );
+                   
+                      },
+                ),
+                      
+                    );
+                     },
+                    valueListenable: calculateList,
+                    
+                    ),
+                    InkWell(
+                      onTap: () {
+                        setState(() {
+                          Navigator.pop(context);
+                        });
+                      },
+                      child: Container(
+                              width: double.infinity,
+                              height: 20,
+                              padding: const EdgeInsets.all(5),
+                              decoration:  BoxDecoration(color:  curActiveMenuColor),
+                              child: Image.asset("assets/buttomSheet.png", color: curFirstColor ),
+                            ),
+                    )
+                  
+                ],
+               )
+              );
+            },
+          );
+                          }),
                           child: Container(
                             padding: const EdgeInsets.all(2),
                             decoration: BoxDecoration(
@@ -82,7 +185,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   textAlign: TextAlign.end,
                   style: TextStyle(
                     color: curNumbersColor,
-                    fontSize: editFontSize,
+                    fontSize: resultFontSize
                   ),
                 ),
               ),
@@ -98,10 +201,13 @@ class _CalculatorPageState extends State<CalculatorPage> {
                   textAlign: TextAlign.end,
                   style: TextStyle(
                     color: curNumbersColor,
-                    fontSize: resultFontSize,
+                    fontSize: editFontSize,
                   ),
                 ),
               ),
+
+
+           
               GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
@@ -180,10 +286,10 @@ class _CalculatorPageState extends State<CalculatorPage> {
         },
         child: Container(
           width: double.infinity,
-          height: 30,
-          padding: const EdgeInsets.all(2),
+          height: 20,
+          padding: const EdgeInsets.all(5),
           decoration:  BoxDecoration(color:  curActiveMenuColor),
-          child: Image.asset("assets/buttomSheet.png", height: 15, width: 29, color: curActiveMenuColor,),
+          child: Image.asset("assets/buttomSheet.png", color: curFirstColor,),
         ),
       ),
         ],
@@ -198,6 +304,7 @@ class _CalculatorPageState extends State<CalculatorPage> {
     }
     return scaleWidget(
       onTap: () => btnOnClick(text),
+      longTap: ()=>longClear(),
       scale: 0.7,
       child: Container(
         alignment: Alignment.center,
@@ -216,10 +323,15 @@ class _CalculatorPageState extends State<CalculatorPage> {
 
    btnOnClick(String text) {
     setState(() {
-      if (text == "C") {
-        resultController.text = '';
-        editController.text = "";
-      } else if (text == "+/-") {
+      if(editController.text.length>15){
+        editFontSize=11*editFontSize/editController.text.length+10;
+      }
+       if(resultController.text.length>10){
+        resultFontSize=10*resultFontSize/resultController.text.length+5;
+      }
+      if (text.contains(RegExp(r"[0-9]"))) {
+      resultController.text += text;
+    }else if (text == "+/-") {
         editController.text =
             "${double.parse(resultat(resultController.text)) * (-1)}";
         resultController.text = editController.text;
@@ -276,47 +388,36 @@ class _CalculatorPageState extends State<CalculatorPage> {
       } else if (text == "=") {
         try {
           editController.text = resultat(resultController.text);
+           var model= CalculateModel(date: "${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')} ${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}", caculate: resultController.text, result:editController.text);
+            calculateList.value.add(model);
+            addBox<CalculateModel>(calculateBox, model);
         } catch (e) {
           editController.text = "EROR";
           resultController.text = '';
         }
         resultController.text = editController.text;
-      } else {
-        if (resultController.text == '0') {
-          resultController.text = text;
-        } else {
-          resultController.text += text;
-          var a = int.parse(text);
-          //editController.text=resultat(resultController.text);
-          if (0 <= a && a <= 9) {
-            if (resultController.text.contains('+') ||
-                resultController.text.contains('-') ||
-                resultController.text.contains('÷') ||
-                resultController.text.contains('x')) {
-              if (resultController
-                          .text[resultController.text.length - 2] !=
-                      '+' ||
+      }else if(text == "+" || text =="-" || text =="÷" || text =="x"){
+        if(resultController.text.isEmpty || (resultController
+                          .text[resultController.text.length - 1] !=
+                      '+' &&
                   resultController
-                          .text[resultController.text.length - 2] !=
-                      '-' ||
+                          .text[resultController.text.length - 1] !=
+                      '-' &&
                   resultController
-                          .text[resultController.text.length - 2] !=
-                      '÷' ||
-                  resultController.text[resultController.text.length - 2] !=
-                      '-' ||
-                  resultController.text[resultController.text.length - 2] !=
-                      'x') {
-                editController.text = "";
-                editController.text += resultat(resultController.text);
-              } else {
-                editController.text = 'EROR';
-              }
-            } else {
-              editController.text += text;
-            }
-          }
+                          .text[resultController.text.length - 1] !=
+                      '÷' &&
+                  resultController.text[resultController.text.length - 1] !=
+                      '-' &&
+                  resultController.text[resultController.text.length - 1] !=
+                      'x') ){
+           resultController.text+=text;   
+            editController.text=resultat(resultController.text);
+            
+                    }
+        }else if(text=="xⁿ"){
+          resultController.text+=text;
+          
         }
-      }
     });
   }
 
@@ -324,10 +425,12 @@ class _CalculatorPageState extends State<CalculatorPage> {
     expression = resultController.text;
     expression = expression.replaceAll('÷', '/');
     expression = expression.replaceAll('x', '*');
+
     Parser p = Parser();
     Expression exp = p.parse(expression);
     ContextModel cm = ContextModel();
     return "${exp.evaluate(EvaluationType.REAL, cm)}";
+
   }
 
     Widget colorizeAnimation() {
@@ -350,11 +453,19 @@ class _CalculatorPageState extends State<CalculatorPage> {
           textStyle: colorizeTextStyle,
           colors: colorizeColors,
           textAlign: TextAlign.center,
-          speed: const Duration(milliseconds: 500),
+          speed: const Duration(milliseconds: 1000),
         ),
       ],
       repeatForever: true,
     );
   }
+
+  longClear(){
+    resultController.text="";
+    editController.text="";
+      editFontSize = 28;
+       resultFontSize = 64;
+  }
+
 }
 

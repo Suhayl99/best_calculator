@@ -265,7 +265,7 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
                     const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "${"Courses as of-${DateTime.now().year}-" "${DateTime.now().month}-".padLeft(2, "0")}${"${DateTime.now().day}(".padLeft(2, "0")}${"${DateTime.now().hour}".padLeft(2, "0")}:${"${DateTime.now().minute})".padLeft(2, "0")}",
+                  "Courses as of-${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
                   style: const TextStyle(color: Colors.white70, fontSize: 16),
                 )),
             GridView.count(
@@ -293,6 +293,7 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
                 button(curAppBarColor, ".", curOperandsColor),
                 button(curAppBarColor, "0", curOperandsColor),
                 button(curAppBarColor, "00", curOperandsColor),
+                button(curAppBarColor, "Ok", curOperandsColor),
               ],
             ),
           ],

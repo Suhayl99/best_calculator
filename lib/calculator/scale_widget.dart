@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 Widget scaleWidget(
-    {required Widget child, required Function onTap, double scale = 0.9, int time = 100, bool isWait = false}) {
+    {required Widget child, required Function onTap, Function? longTap, double scale = 0.9, int time = 100, bool isWait = false}) {
   bool pressed = false;
   return StatefulBuilder(
       builder: (context, setState) => GestureDetector(
@@ -15,6 +15,19 @@ Widget scaleWidget(
                 } else {
                   Future.delayed(Duration(milliseconds: time), () async {
                     onTap();
+                  });
+                }
+              });
+            },
+            onLongPress:(){
+              setState(() => pressed = true);
+              Future.delayed(Duration(milliseconds: time), () async {
+                setState(() => pressed = false);
+                if (isWait) {
+                  longTap!();
+                } else {
+                  Future.delayed(Duration(milliseconds: time), () async {
+                    longTap!();
                   });
                 }
               });

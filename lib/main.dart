@@ -1,4 +1,6 @@
+import 'package:best_calculator/about.dart';
 import 'package:best_calculator/calculator/calculator_page.dart';
+import 'package:best_calculator/calculator/calcule_model.dart';
 import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_page.dart';
 import 'package:flutter/material.dart';
@@ -6,10 +8,12 @@ import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'currency/compare_page.dart';
 import 'currency/currency_model.dart';
+import 'package:wakelock/wakelock.dart';
 
 Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter<CurrencyModel>(CurrencyModelAdapter());
+  Hive.registerAdapter<CalculateModel>(CalculateModelAdapter());
   runApp( MyApp(title:"Best Calculator"));
 }
 
@@ -159,10 +163,37 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                 height: 14,
               ),
               Stack(
-                alignment: Alignment.bottomCenter,
+                alignment: Alignment.center,
                 children:[
                    InkWell(
-                  onTap: () {},
+                  onTap: () => showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+          title:  Text('To get more themes, stay tuned to our product. We will add new themes with each update', style:TextStyle(fontSize: 32, color: curActiveMenuColor ),
+        ),
+        actions: [
+          InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Container(
+              height: 30,
+              width: 50,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Color(0xffEC5C22), Color(0xffF0781A)],
+                          transform: GradientRotation(62),
+                        ),
+                      ),
+                      child: const Text(
+                        "Ok",
+                        style: TextStyle(fontSize: 24, color: Colors.white),
+                      ),
+                    ),
+          ),
+        ],
+      ),),
                   child: Container(
                     alignment: Alignment.center,
                     width: 262,
@@ -256,9 +287,16 @@ class _SettingPageState extends State<SettingPage> {
   _SettingPageState(this.label);
   String label;
    bool isAccuracy = false;
-    final controller= TextEditingController();
+   bool isSwipe = false;
+   bool isAnimation = false;
+   bool isScreen = false;
+   bool isVibration = false;
+   bool isBar = false;
+   final controller= TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+
     return Container(
       color: const Color(0xffC1C1C1),
       child: ListView(
@@ -297,30 +335,14 @@ class _SettingPageState extends State<SettingPage> {
          child: const Text("ok", style: TextStyle(color: Colors.black),),),
          ],),
        ),
-  _itemSettings("Minimum accuracy","Limit minimum accuracy to 2 digits"),
-  _itemSettings("Swipe to count","Swipe down the keyboard to calculate"),
-  _itemSettings("Disable text animation","Turn off text animation in the main section"),
-  _itemSettings("Leave the screen on","Disable sleep mode while the application is \n running"),
-  _itemSettings("turn off the vibration",""),
-  _itemSettings("hide status bar",""),
-    Container(
-      alignment: Alignment.center,
-      padding: const EdgeInsets.only(bottom: 40),
-      child: TextButton.icon(onPressed: (){}, icon: const Icon(Icons.info) , label: const Text("About", style:TextStyle(color: Colors.black87, fontSize: 24) ,)),
-    )
-      ]),
-    );
-  }
-
-  Container _itemSettings(String text1, String text2) {
-    return Container(
-  padding: const EdgeInsets.symmetric(horizontal: 20, vertical:20),
+  Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical:20),
   child: Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
-      Column(children:  [
-       Text(text1, style: const TextStyle(color: Colors.black87, fontSize: 24),),
-         Text(text2, style: const TextStyle(color: Colors.black54, fontSize: 12),),
+      Column(children:  const [
+       Text("Minimum accuracy", style:  TextStyle(color: Colors.black87, fontSize: 24),),
+         Text("Limit minimum accuracy to 2 digits", style: TextStyle(color: Colors.black54, fontSize: 12),),
       ],),
         Switch(
             value: isAccuracy,
@@ -328,12 +350,140 @@ class _SettingPageState extends State<SettingPage> {
               setState(() {
                 isAccuracy = value;
               });
-             }, 
+
+              }, 
             ),
           ],
          ),
-);
+),
+  Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical:20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(children:  const [
+       Text("Swipe to count", style:  TextStyle(color: Colors.black87, fontSize: 24),),
+         Text("Swipe down the keyboard to calculate", style: TextStyle(color: Colors.black54, fontSize: 12),),
+      ],),
+        Switch(
+            value: isSwipe,
+            onChanged: (bool value) { 
+              setState(() {
+                isSwipe = value;
+              });
+
+              }, 
+            ),
+          ],
+         ),
+),
+    Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical:20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(children:  const [
+       Text("Disable text animation", style:  TextStyle(color: Colors.black87, fontSize: 24),),
+         Text("Turn off text animation in the main section", style: TextStyle(color: Colors.black54, fontSize: 12),),
+      ],),
+        Switch(
+            value: isAnimation,
+            onChanged: (bool value) { 
+              setState(() {
+                isAnimation = value;
+              });
+
+              }, 
+            ),
+          ],
+         ),
+),
+  Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical:20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(children:  const [
+       Text("Le tavehe screen on", style:  TextStyle(color: Colors.black87, fontSize: 24),),
+         Text("Disable sleep mode while the application is \n running", style: TextStyle(color: Colors.black54, fontSize: 12),),
+      ],),
+        Switch(
+            value: isScreen,
+            onChanged: (bool value) { 
+              setState(() {
+                isScreen = value;
+                 if(isScreen){
+                  Wakelock.enable();
+                }else{
+                  Wakelock.disable();
+                }
+              });
+
+              }, 
+            ),
+          ],
+         ),
+),
+  Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical:20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(children:  const [
+       Text("turn off the vibration", style:  TextStyle(color: Colors.black87, fontSize: 24),),
+         Text("", style: TextStyle(color: Colors.black54, fontSize: 12),),
+      ],),
+        Switch(
+            value: isVibration,
+            onChanged: (bool value) { 
+              setState(() {
+                isVibration = value;
+              });
+
+              }, 
+            ),
+          ],
+         ),
+),
+  Container(
+  padding: const EdgeInsets.symmetric(horizontal: 10, vertical:20),
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Column(children:  const [
+       Text("hide status bar", style:  TextStyle(color: Colors.black87, fontSize: 24),),
+         Text("", style: TextStyle(color: Colors.black54, fontSize: 12),),
+      ],),
+        Switch(
+            value: isBar,
+            onChanged: (bool value) { 
+              setState(() {
+                isBar = value;
+                if(isBar){
+                  SystemChrome.setEnabledSystemUIMode(
+                    SystemUiMode.manual, overlays: [SystemUiOverlay.bottom]);
+                }else{
+                  SystemChrome.setEnabledSystemUIMode(
+                    SystemUiMode.manual, overlays: [SystemUiOverlay.top]);
+                }
+              });
+
+              }, 
+            ),
+          ],
+         ),
+),
+    Container(
+      alignment: Alignment.center,
+      padding: const EdgeInsets.only(bottom: 40),
+      child: TextButton.icon(onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context) =>  const About()));
+      }, icon: const Icon(Icons.info) , label: const Text("About", style:TextStyle(color: Colors.black87, fontSize: 24) ,)),
+    )
+      ]),
+    );
   }
+
 }
 
 
@@ -362,7 +512,6 @@ class _ThemaPageState extends State<ThemaPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _themeButton("1"),
-               
                   _themeButton("2"),
                 ],
               ),
@@ -421,10 +570,8 @@ class _ThemaPageState extends State<ThemaPage> {
   var thema=int.parse(image);
     return GestureDetector(
       onTap: () {
-        setState(() {
           changeThemeColor(thema);
-          Navigator.pop(context);
-        });
+          Navigator.pop(context);      
       },
       child: Image.asset(
         "assets/calculator/$image.png",
@@ -435,5 +582,4 @@ class _ThemaPageState extends State<ThemaPage> {
   }
 
 }
-
 

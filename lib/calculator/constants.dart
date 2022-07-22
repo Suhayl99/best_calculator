@@ -25,7 +25,7 @@ TextStyle kTextStyle({
       height: height);
 }
 
-
+const String calculateBox='calculate_box';
 const String currencyBox = 'currency_box';
 const String currencyListKey = 'currency_list_key';
 const String dateBox = 'date_box';
