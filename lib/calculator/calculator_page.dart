@@ -30,7 +30,12 @@ class _CalculatorPageState extends State<CalculatorPage> with HiveUtills{
   String expression = "";
 
 
+   @override
+  void  initState () {
+  controller = ScrollController(); 
+  super . initState ();
   
+  }
   
 
   getList() async{
