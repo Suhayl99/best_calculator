@@ -27,6 +27,30 @@ mixin HiveUtills {
     return box.getAt(index);
   }
 
+    Future<T?> getBox<T>(String boxName, String key) async {
+    Box<T> box = await isCheckOpenBox<T>(boxName);
+    return box.get(key);
+  }
+
+
+    Future<bool> keyContaBox<T>(String boxName, String key) async {
+       Box<T> box;
+         if (Hive.isBoxOpen(boxName)) {
+      box = Hive.box<T>(boxName);
+    } else {
+      box = Hive.openBox<T>(boxName) as Box<T>;
+    }
+    if (box.keys.contains(key)){
+        return true;
+    }else{
+      return false;
+    }
+  }
+
+   Future putBox<T>(String boxName,String key, T value) async {
+    Box<T> box = await isCheckOpenBox<T>(boxName);
+    await box.put(key, value);
+  }  
 
     Future deleteAtBox<T>(String boxName, int index) async {
     Box<T> box = await isCheckOpenBox<T>(boxName);

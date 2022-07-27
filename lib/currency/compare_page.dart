@@ -154,147 +154,134 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
         child: Column(
           children: [
-            FutureBuilder(
-                future: _listCurrency.isEmpty ? _loadData() : null,
-                builder: ((context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(14),
-                      margin: const EdgeInsets.symmetric(vertical: 20),
-                      decoration: BoxDecoration(
-                        color: curAppBarColor,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Exchange',
-                                style: kTextStyle(
-                                    size: 16, fontWeight: FontWeight.w600),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                iconSize: 20,
-                                icon: const Icon(
-                                  Icons.settings,
-                                  size: 20,
-                                  color: Colors.white,
+            Expanded(
+              flex: 3,
+              child: FutureBuilder(
+                  future: _listCurrency.isEmpty ? _loadData() : null,
+                  builder: ((context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          color: curAppBarColor,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Column(
+                          children: [
+                           
+                            Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                Column(
+                                  children: [
+                                    _itemExch(
+                                        _editingControllerTop, topCur, _topFocus,
+                                        ((value) {
+                                      if (value is CurrencyModel) {
+                                        setState(() => topCur = value);
+                                      }
+                                    })),
+                                    const SizedBox(
+                                      height: 15,
+                                    ),
+                                    _itemExch(_editingControllerBottom, bottomCur,
+                                        _bottomFocus, ((value) {
+                                      if (value is CurrencyModel) {
+                                        setState(() => bottomCur = value);
+                                      }
+                                    })),
+                                  ],
                                 ),
-                              )
-                            ],
+                                InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      var model = topCur.copyWith();
+                                      topCur = bottomCur.copyWith();
+                                      bottomCur = model;
+                                      _editingControllerTop.clear();
+                                      _editingControllerBottom.clear();
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 35,
+                                    width: 35,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xff2d334d),
+                                      shape: BoxShape.circle,
+                                      border: Border.all(color: Colors.white12),
+                                    ),
+                                    child: const Icon(
+                                      Icons.currency_exchange,
+                                      color: Colors.white,
+                                      size: 20,
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Expanded(
+                        child: Center(
+                          child: Text(
+                            'Error',
+                            style: kTextStyle(size: 18),
                           ),
-                          Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Column(
-                                children: [
-                                  _itemExch(
-                                      _editingControllerTop, topCur, _topFocus,
-                                      ((value) {
-                                    if (value is CurrencyModel) {
-                                      setState(() => topCur = value);
-                                    }
-                                  })),
-                                  const SizedBox(
-                                    height: 15,
-                                  ),
-                                  _itemExch(_editingControllerBottom, bottomCur,
-                                      _bottomFocus, ((value) {
-                                    if (value is CurrencyModel) {
-                                      setState(() => bottomCur = value);
-                                    }
-                                  })),
-                                ],
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  setState(() {
-                                    var model = topCur.copyWith();
-                                    topCur = bottomCur.copyWith();
-                                    bottomCur = model;
-                                    _editingControllerTop.clear();
-                                    _editingControllerBottom.clear();
-                                  });
-                                },
-                                child: Container(
-                                  height: 35,
-                                  width: 35,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xff2d334d),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(color: Colors.white12),
-                                  ),
-                                  child: const Icon(
-                                    Icons.currency_exchange,
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Expanded(
-                      child: Center(
-                        child: Text(
-                          'Error',
-                          style: kTextStyle(size: 18),
                         ),
-                      ),
-                    );
-                  } else {
-                    return const Expanded(
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
+                      );
+                    } else {
+                      return const Expanded(
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    );
-                  }
-                })),
+                      );
+                    }
+                  })),
+            ),
             Container(
                 padding:
-                    const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
                 alignment: Alignment.centerRight,
                 child: Text(
-                  "Courses as of-${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')}",
+                  "Courses as of-${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}(${DateTime.now().hour.toString().padLeft(2, '0')}:${DateTime.now().minute.toString().padLeft(2, '0')})",
                   style: const TextStyle(color: Colors.white70, fontSize: 16),
                 )),
-            GridView.count(
-              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              crossAxisSpacing: 2,
-              mainAxisSpacing: 2,
-              childAspectRatio: size.height * 0.0016,
-              crossAxisCount: 4,
-              primary: false,
-              children: [
-                button(curAppBarColor, "7", curOperandsColor),
-                button(curAppBarColor, "8", curOperandsColor),
-                button(curAppBarColor, "9", curOperandsColor),
-                button(curAppBarColor, "⌫", curOperandsColor),
-                button(curAppBarColor, "4", curOperandsColor),
-                button(curAppBarColor, "5", curOperandsColor),
-                button(curAppBarColor, "6", curOperandsColor),
-                button(curAppBarColor, "⟠", curOperandsColor),
-                button(curAppBarColor, "1", curOperandsColor),
-                button(curAppBarColor, "2", curOperandsColor),
-                button(curAppBarColor, "3", curOperandsColor),
-                button(curAppBarColor, "C", curOperandsColor),
-                button(curAppBarColor, ".", curOperandsColor),
-                button(curAppBarColor, "0", curOperandsColor),
-                button(curAppBarColor, "00", curOperandsColor),
-                button(curAppBarColor, "Ok", curOperandsColor),
-              ],
+            Expanded(
+              flex: 5,
+              child: GridView.count(
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                crossAxisSpacing: 2,
+                mainAxisSpacing: 2,
+                childAspectRatio: size.height * 0.00164,
+                crossAxisCount: 4,
+                primary: false,
+                children: [
+                  button(curAppBarColor, "7", curOperandsColor),
+                  button(curAppBarColor, "8", curOperandsColor),
+                  button(curAppBarColor, "9", curOperandsColor),
+                  button(curAppBarColor, "⌫", curOperandsColor),
+                  button(curAppBarColor, "4", curOperandsColor),
+                  button(curAppBarColor, "5", curOperandsColor),
+                  button(curAppBarColor, "6", curOperandsColor),
+                  button(curAppBarColor, "⟠", curOperandsColor),
+                  button(curAppBarColor, "1", curOperandsColor),
+                  button(curAppBarColor, "2", curOperandsColor),
+                  button(curAppBarColor, "3", curOperandsColor),
+                  button(curAppBarColor, "C", curOperandsColor),
+                  button(curAppBarColor, ".", curOperandsColor),
+                  button(curAppBarColor, "0", curOperandsColor),
+                  button(curAppBarColor, "00", curOperandsColor),
+                  button(curAppBarColor, "OK", curOperandsColor),
+                ],
+              ),
             ),
           ],
         ),
@@ -447,6 +434,8 @@ class _ComparePageState extends State<ComparePage> with HiveUtil {
           _editingControllerTop.text +="00";
         }
           _editingControllerBottom.text =(double.parse(resultat(_editingControllerTop.text))*double.parse(a)).toStringAsFixed(2);
+      }else if(text=="OK"){
+          
       }else{
         String a=bottomCur.rate ?? "0";
         _editingControllerTop.text+=text;

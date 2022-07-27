@@ -1,3 +1,4 @@
+import 'package:best_calculator/calculator/constants.dart';
 import 'package:best_calculator/change_theme.dart';
 import 'package:best_calculator/ruler/ruler_utils.dart';
 import 'package:flutter/material.dart';
@@ -34,7 +35,7 @@ class _AreaState extends State<Area> {
   @override
   Widget build(BuildContext context) {
      Size size = MediaQuery.of(context).size;
-     return Column(
+     return ListView(
     children: [
      Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
@@ -86,15 +87,15 @@ class _AreaState extends State<Area> {
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
-                height: size.height*0.44,
-                color: curBgColor,
+                height: size.height*0.5,
+                color: white,
                 child: Center(
                   child:  GridView.count(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 crossAxisSpacing: 2,
                 mainAxisSpacing: 2,
-                childAspectRatio: size.height * 0.0016,
+                childAspectRatio: size.height * 0.00164,
                 crossAxisCount: 4,
                 primary: false,
                 children: [
@@ -127,7 +128,7 @@ class _AreaState extends State<Area> {
                 ),
         ),
       SizedBox(
-        height: 450,
+        height: 500,
         child: ListView(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,

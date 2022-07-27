@@ -44,16 +44,37 @@ unitElements(String name, String shortName, double result, Color color, String c
 
 
 
-  unitElementTemperature(String name, String shortName, Color color, String count) {
+  unitElementTemperature(String name, String shortName, Color color, String count, String value) {
   double counts = double.parse(count);
   double result=1;
-    if(shortName=="K"){
+    if(value=="celsius/C"){
+      if(shortName=="K"){
         result=counts+273.15;
-    }else if(shortName=="F"){
+    }else {
+      if(shortName=="F"){
       result = (counts*9/5)+32;
     }else{
       result = counts;
     }
+    }}else  if(value=="kelvin/K"){
+      if(shortName=="K"){
+        result=counts;
+    }else {
+      if(shortName=="F"){
+      result = (counts-273.15)*9/5+32;
+    }else{
+      result = counts-273.15;
+    }
+    }}else  if(value=="fahrenheit/F"){
+      if(shortName=="K"){
+        result=(counts-32)*5/9+273.15;
+    }else {
+      if(shortName=="F"){
+      result = counts;
+    }else{
+      result = (counts-32)*5/9;
+    }
+    }}
   return Container(
     margin: const EdgeInsets.only(top: 1),
     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),

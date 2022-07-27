@@ -12,13 +12,9 @@ class About extends StatefulWidget {
 class _AboutState extends State<About> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          resizeToAvoidBottomInset: false,
-          backgroundColor: curWorkSpaceColor,
-          body: SafeArea(
-              child: Center(
+    return   Container(
+                color: curWorkSpaceColor,
+                alignment: Alignment.center,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -30,12 +26,12 @@ class _AboutState extends State<About> {
                 ),
                 const SizedBox(height: 40),
                 const Text(
-                  'Best Calculator ver 1.0',
-                  style: TextStyle(fontSize: 30, color: Colors.white),
+                  'Best calculator ver 1.0',
+                  style: TextStyle(fontSize: 18, color: Colors.white),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 10),
                 const Text("Creator: To'xtamatov Kamoliddin",
-                    style: TextStyle(fontSize: 20, color: Colors.white)),
+                    style: TextStyle(fontSize: 16, color: Colors.white)),
                 const SizedBox(height: 20),
                 TextButton.icon(
                     onPressed: () {},
@@ -46,10 +42,9 @@ class _AboutState extends State<About> {
                     ),
                     label: const Text('suhaylibnamir@gmail.com',
                         style:
-                            TextStyle(fontSize: 20, color: Colors.white)))
+                            TextStyle(fontSize: 16, color: Colors.white)))
               ],
             ),
-          )),
-        ));
+           );
   }
 }

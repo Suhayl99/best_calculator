@@ -31,7 +31,7 @@ class _DictanceState extends State<Dictance> {
   @override
   Widget build(BuildContext context) {
      Size size = MediaQuery.of(context).size;
-     return Column(
+     return ListView(
     children: [
         Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
@@ -85,7 +85,7 @@ class _DictanceState extends State<Dictance> {
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
-                height: size.height*0.44,
+                height: size.height*0.54,
                 color: curBgColor,
                 child: Center(
                   child:  GridView.count(
@@ -93,7 +93,7 @@ class _DictanceState extends State<Dictance> {
                 shrinkWrap: true,
                 crossAxisSpacing: 2,
                 mainAxisSpacing: 2,
-                childAspectRatio: size.height * 0.0016,
+                childAspectRatio: size.height * 0.00164,
                 crossAxisCount: 4,
                 primary: false,
                 children: [
@@ -126,8 +126,8 @@ class _DictanceState extends State<Dictance> {
                   ],
                 ),
         ),
-      SizedBox(
-        height: 450,
+      Expanded(
+        flex: 6,
         child: ListView(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,

@@ -27,7 +27,7 @@ final List<double> qiymat = [
   @override
   Widget build(BuildContext context) {
      Size size = MediaQuery.of(context).size;
-     return Column(
+     return ListView(
     children: [
      Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
@@ -79,7 +79,7 @@ final List<double> qiymat = [
           Scaffold.of(context).showBottomSheet<void>(
             (BuildContext context) {
               return Container(
-                height: size.height*0.44,
+                height: size.height*0.5,
                 color: curBgColor,
                 child: Center(
                   child:  GridView.count(
@@ -120,14 +120,14 @@ final List<double> qiymat = [
                 ),
         ),
       SizedBox(
-        height: 450,
+        height: 500,
         child: ListView(
           scrollDirection: Axis.vertical,
           shrinkWrap: true,
           children: [
-          unitElementTemperature("Celsius", "C", curFirstColor, count),
-          unitElementTemperature("Kelvin", "K", curSecondColor, count),
-            unitElementTemperature("fahrenheit", "F", curFirstColor, count),
+          unitElementTemperature("Celsius", "C", curFirstColor, count, _value!),
+          unitElementTemperature("Kelvin", "K", curSecondColor, count, _value!),
+            unitElementTemperature("fahrenheit", "F", curFirstColor, count, _value!),
           ],
         ),
       ),

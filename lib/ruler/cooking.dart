@@ -39,7 +39,7 @@ class _CookingState extends State<Cooking> {
   @override
   Widget build(BuildContext context) {
      Size size = MediaQuery.of(context).size;
-     return Column(
+     return ListView(
     children: [
        Container(
           padding: const EdgeInsets.only(left: 20, right: 20, top: 100),
